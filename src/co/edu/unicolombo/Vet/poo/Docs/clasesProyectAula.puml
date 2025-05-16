@@ -1,0 +1,85 @@
+@startuml
+class Usuario {
+    # String cedula;
+    # String apellido;
+    # String nombre;
+    # String direccion;
+    # String correo;
+    # String clave;
+    # String telefono;
+    # String tipoUsuario;
+}
+
+class Cliente extends Usuario {
+    - List<Usuario>usuarios;
+    - List<Mascota> mascotas;
+}
+
+class Veterinario extends Usuario {
+    - List<Usuario>veterinarios;
+    - String especialidad;
+    - Horario horario;
+}
+
+class HistorialCitas {
+    - int contador;
+    - List<Cita> citas;
+   
+}
+
+class Movimiento {
+    - String tipo;
+    - int idMovimiento;
+    - String fecha;
+    - double total;
+    - String metodoPago;
+    - Usuario tipoUsuario;
+}
+
+class Mascota {
+    - String cedulaUsuario;
+    - String nombreMascota;
+    - String color;
+    - String TipoSangre;
+    - String especie;
+    - Cliente cliente;
+}
+
+class Cita {
+    - int idcita;
+    - String cedulacliente;
+    - String mascotaNombre;
+    - String horaEntrada;
+    - String horaSalida;
+    - String fecha;
+    - String confirmar;
+    - String descrip;
+    - Diagnostico diagnostico;
+    - HistorialCitas historialcitas;
+}
+
+class Diagnostico {
+    - String sintomas;
+    - String tratamiento;
+    - String observaciones;
+    - String idCita;
+    - Veterinario veterinario;
+}
+
+
+class Horario{
+- String entrada;
+- String salida;
+- String resesos;
+}
+'Relaciones
+Cliente "1" -- "*" Mascota: es dueño
+Cita "*" -- "1" Mascota: pertenece
+Diagnostico "1" -- "1" Veterinario: es determinado por
+HistorialCitas "1" -- "*" Cita: contiene
+Cita "1" -- "1" Diagnostico: genera
+Movimiento "1" -- "1" Cita: es un
+Cliente "1" -- "*" Movimiento : Realiza
+Veterinario"1"--"1"Horario:tiene
+
+@enduml
