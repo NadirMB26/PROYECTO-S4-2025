@@ -24,11 +24,6 @@ public class DiagnosticoRepository implements IDiagnosticoRepository{
            diagnosticosDB.add(citas);
            return diagnosticosDB.size();
         }
-        for(Cita citas1:diagnosticosDB){
-            if(citas.getCedulacliente().equalsIgnoreCase(citas1.getCedulacliente())){
-                throw new Exception("El diagnostico de "+citas.getCedulacliente()+" ya existe");
-            }
-        }
      
            diagnosticosDB.add(citas);
         return diagnosticosDB.size();

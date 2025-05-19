@@ -292,7 +292,12 @@ private Usuario usuActual;
             String correo=FieldCorreo.getText();
             String clave=FieldClave.getText();
             String telefono=FieldTelefono.getText();
-
+            String tipo;
+                        if(radioRecep.isSelected()){
+                    tipo="RECEPCIONISTA";
+                }else if(radioAdmin.isSelected()){
+                    tipo="ADMIN";
+                }
             usuActual.setNombre(nombre);
             usuActual.setApellido(apellido);
             usuActual.setDireccion(direccion);
@@ -300,8 +305,9 @@ private Usuario usuActual;
             usuActual.setClave(clave);
             usuActual.setTelefono(telefono);
 
+
             var editarUsuCommand=new EditarUsuCommand(usuActual.getCedula(),
-                usuActual.getApellido(),usuActual.getNombre(),usuActual.getDireccion(),usuActual.getCorreo(),usuActual.getClave(),usuActual.getTelefono());
+                usuActual.getApellido(),usuActual.getNombre(),usuActual.getDireccion(),usuActual.getCorreo(),usuActual.getClave(),usuActual.getTelefono(),usuActual.getRol());
 
             var rolRepository=new UsuarioRepository();
             var editarCommandHandler=new EditarUsuCommandHandler(rolRepository);

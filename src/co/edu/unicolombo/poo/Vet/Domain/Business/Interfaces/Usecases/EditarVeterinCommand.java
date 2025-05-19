@@ -9,15 +9,18 @@ package co.edu.unicolombo.poo.Vet.Domain.Business.Interfaces.Usecases;
  * @author USER
  */
 public class EditarVeterinCommand {
-
     private String cedula;
     private String nombre;
     private String apellido;
-    private String especialidad;
-    private String correo;
     private String direccion;
-    private String telefono;
+    private String correo;
     private String clave;
+    private String telefono;
+    private String especialidad;
+   
+    
+   
+    
 
     public EditarVeterinCommand(String cedula, String nombre, String apellido, String direccion , String correo, String clave, String telefono, String especialidad) throws Exception {
 
@@ -51,11 +54,11 @@ public class EditarVeterinCommand {
         this.cedula = cedula;
         this.nombre = nombre;
         this.apellido = apellido;
-        this.especialidad = especialidad;
-        this.correo = correo;
         this.direccion = direccion;
-        this.telefono = telefono;
+        this.correo = correo;
         this.clave=clave;
+        this.telefono = telefono;
+        this.especialidad = especialidad;
     }
 
     public String getCedula() {

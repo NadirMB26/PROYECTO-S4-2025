@@ -49,7 +49,8 @@ public class CitaRepository implements ICitaRepository{
         }
         Cita citaFound = null;
         for(Cita citas1:citasDB){
-           if(citas1.getCedulacliente().equalsIgnoreCase(Ccliente)){
+            String idc =citas1.getIdcita()+"";
+           if(idc.equalsIgnoreCase(Ccliente)){
                citaFound = citas1;
                break;
            } 

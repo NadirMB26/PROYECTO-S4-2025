@@ -20,15 +20,16 @@ public class EditarVeterinCommandHandler implements IEditarVeterinCommand {
     @Override
     public void editar(EditarVeterinCommand comand) throws Exception {
         Veterinario vet = new Veterinario();
+        vet.setCedula(comand.getCedula());
         vet.setNombre(comand.getNombre());
         vet.setApellido(comand.getApellido());
-        vet.setCedula(comand.getCedula());
-        vet.setCorreo(comand.getCorreo());
         vet.setDireccion(comand.getDireccion());
-        vet.setEspecialidad(comand.getEspecialidad());
-        vet.setTelefono(comand.getTelefono());
+        vet.setCorreo(comand.getCorreo());
         vet.setClave(comand.getClave());
+        vet.setTelefono(comand.getTelefono());
+        vet.setEspecialidad(comand.getEspecialidad());
         veteRepository.editVete(vet);
+        
         
     }
 

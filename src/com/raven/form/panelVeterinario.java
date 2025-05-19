@@ -374,31 +374,38 @@ public class panelVeterinario extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(this, "Primero busque el veterinario y editelo");
                 return;
             }
-            String nombre = FieldName.getText();
-            String apellido = FieldApellido.getText();
-            String direccion = FieldDireccion.getText();
-            String correo = FieldCorreo.getText();
+             // Obtener los datos del formulario
+    String nombre = FieldName.getText();
+    String apellido = FieldApellido.getText();
+    String direccion = FieldDireccion.getText();
+    String correo = FieldCorreo.getText();
+    String pass = FieldClave.getText();
+    String telefono = FieldTelefono.getText();
+    String rol = ComboEsp.getSelectedItem().toString();
 
-            String telefono = FieldTelefono.getText();
-            //
-            String clave = FieldClave.getText();
-            String especialidad = ComboEsp.getSelectedItem().toString();
+    // Actualizar el objeto
+    veterinActual.setNombre(nombre);
+    veterinActual.setApellido(apellido);
+    veterinActual.setDireccion(direccion);
+    veterinActual.setCorreo(correo);
+    veterinActual.setClave(pass);
+    veterinActual.setTelefono(telefono);
+    veterinActual.setRol(rol);
 
-            veterinActual.setNombre(nombre);
-            veterinActual.setApellido(apellido);
-            veterinActual.setDireccion(direccion);
-            veterinActual.setCorreo(correo);
+    // Ejecutar el comando
+    var editarVeterinCommand = new EditarVeterinCommand(
+            veterinActual.getCedula(),
+            veterinActual.getNombre(), 
+            veterinActual.getApellido(), 
+            veterinActual.getDireccion(), 
+            veterinActual.getCorreo(),
+            veterinActual.getClave(),
+            veterinActual.getTelefono(), 
+            veterinActual.getEspecialidad());
 
-            veterinActual.setTelefono(telefono);
-            veterinActual.setEspecialidad(especialidad);
-            veterinActual.setClave(clave);
-
-            var editarVeterinCommand = new EditarVeterinCommand(veterinActual.getCedula(),
-                    veterinActual.getApellido(), veterinActual.getNombre(), veterinActual.getDireccion(), veterinActual.getCorreo(), veterinActual.getTelefono(), veterinActual.getEspecialidad(), veterinActual.getClave());
-
-            var rolRepository = new VeterinarioRepository();
-            var editarCommandHandler = new EditarVeterinCommandHandler(rolRepository);
-            editarCommandHandler.editar(editarVeterinCommand);
+    var rolRepository = new VeterinarioRepository();
+    var editarCommandHandler = new EditarVeterinCommandHandler(rolRepository);
+    editarCommandHandler.editar(editarVeterinCommand);
             JOptionPane.showMessageDialog(this, "veterinario Editado ");
 
             cleanFields();

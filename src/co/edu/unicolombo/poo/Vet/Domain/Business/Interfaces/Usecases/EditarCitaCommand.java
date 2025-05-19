@@ -17,10 +17,12 @@ public class EditarCitaCommand {
     private String horaEntrada;
     private String horaSalida;
     private String fecha;
+    private String confirmar;
     private String descrip;
     private String veterinario;
+    private String usuatend;
 
-    public EditarCitaCommand(int idcita, String cedulacliente, String mascotaNombre, String horaEntrada, String horaSalida, String fecha, String descrip, String veterinario) throws Exception {
+    public EditarCitaCommand(int idcita, String cedulacliente, String mascotaNombre, String horaEntrada, String horaSalida, String fecha,String confirmar, String descrip, String veterinario, String usuatend) throws Exception {
         if (cedulacliente == null || cedulacliente.trim().isEmpty()) {
             throw new Exception("La cedula del cliente es requerido");
         }
@@ -52,6 +54,22 @@ public class EditarCitaCommand {
         this.descrip = descrip;
         this.veterinario = veterinario;
         
+    }
+
+    public String getUsuatend() {
+        return usuatend;
+    }
+
+    public void setUsuatend(String usuatend) {
+        this.usuatend = usuatend;
+    }
+
+    public String getConfirmar() {
+        return confirmar;
+    }
+
+    public void setConfirmar(String confirmar) {
+        this.confirmar = confirmar;
     }
 
     public int getIdcita() {

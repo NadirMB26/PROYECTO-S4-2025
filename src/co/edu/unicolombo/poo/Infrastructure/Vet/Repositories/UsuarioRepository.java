@@ -7,6 +7,7 @@ import java.util.List;
 import co.edu.unicolombo.poo.Vet.Domain.Business.Interfaces.Repositories.IUsuRepository;
 
 
+
 public class UsuarioRepository implements IUsuRepository{
   private static List<Usuario> usuariosDB;
   
@@ -14,6 +15,7 @@ public UsuarioRepository(){
     if(usuariosDB==null){
         usuariosDB=new ArrayList<>(); 
     }
+
 }  
 
 
@@ -57,11 +59,15 @@ public UsuarioRepository(){
            usuariosDB.add(usu);
            return usuariosDB.size();
         }
+
         for(Usuario usu1:usuariosDB){
             if(usu.getCedula().equalsIgnoreCase(usu1.getCedula())){
                 throw new Exception("El Usuario "+usu.getCedula()+" ya existe");
             }
         }
+        
+
+        
      
            usuariosDB.add(usu);
         return usuariosDB.size();
