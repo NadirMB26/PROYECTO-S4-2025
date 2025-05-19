@@ -1,6 +1,5 @@
 package co.edu.unicolombo.poo.Vet.Domain.Model;
 
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class Cita {
 
@@ -14,17 +13,13 @@ public class Cita {
     private String descrip;
     private String nombreveterinario;
     private String usuarioS;
-    private static AtomicInteger incrementID;
 
     public Cita() {
     }
 
     public Cita(int idcita, String cedulacliente, String mascotaNombre, String horaEntrada, String horaSalida, String fecha, String confirmar, String descrip, String nombreveterinario, String usuarioS) {
-        
-    if (incrementID == null) {
-            incrementID = new AtomicInteger(0);
-        }
-        this.idcita= getIncrementeID();
+
+        this.idcita= idcita;
         this.cedulacliente = cedulacliente;
         this.mascotaNombre = mascotaNombre;
         this.horaEntrada = horaEntrada;
@@ -120,20 +115,6 @@ public int getIdcita() {
         this.usuarioS = usuarioS;
     }
 
-    public static AtomicInteger getIncrementID() {
-        return incrementID;
-    }
-
-    public static void setIncrementID(AtomicInteger incrementID) {
-        Cita.incrementID = incrementID;
-    }
-
-    private int getIncrementeID() {
-        if (incrementID == null) {
-            incrementID = new AtomicInteger(1);
-        }
-        return incrementID.incrementAndGet();
-    }
     
     
         

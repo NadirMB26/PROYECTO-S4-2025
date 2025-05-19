@@ -1,7 +1,6 @@
 
 package co.edu.unicolombo.poo.Vet.Domain.Business.Interfaces.Usecases;
 
-import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class GuardarCitaCommand {
@@ -11,11 +10,13 @@ public class GuardarCitaCommand {
     private String horaEntrada;
     private String horaSalida;
     private String fecha;
+    private String confirmar; 
     private String descrip;
     private String nombreveterinario;
     private String usuarioS;
     
-    public GuardarCitaCommand(int idcita, String cedulaCliente, String mascotaNombre, String horaEntrada, String horaSalida, String fecha, String descrip,String nombreveterinario,String usuarioS) throws Exception {
+    
+    public GuardarCitaCommand(int idcita, String cedulaCliente, String mascotaNombre, String horaEntrada, String horaSalida, String fecha,String confirmar, String descrip,String nombreveterinario,String usuarioS) throws Exception {
         if (cedulaCliente == null || cedulaCliente.trim().isEmpty()) {
             throw new Exception("La cedula del cliente es requerido");
         }
@@ -47,6 +48,7 @@ public class GuardarCitaCommand {
         this.horaEntrada = horaEntrada;
         this.horaSalida = horaSalida;
         this.fecha = fecha;
+        this.confirmar=confirmar;
         this.descrip = descrip;
         this.nombreveterinario=nombreveterinario;
         this.usuarioS=usuarioS;
@@ -54,6 +56,14 @@ public class GuardarCitaCommand {
 
     public int getIdcita() {
         return idcita;
+    }
+
+    public String getConfirmar() {
+        return confirmar;
+    }
+
+    public void setConfirmar(String confirmar) {
+        this.confirmar = confirmar;
     }
 
     public void setIdcita(int idcita) {

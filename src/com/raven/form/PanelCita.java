@@ -28,7 +28,7 @@ import javax.swing.table.DefaultTableModel;
 public class PanelCita extends javax.swing.JPanel {
 
     DefaultTableModel modelo = new DefaultTableModel();
-    
+    public String idc;
     private Cita citaActual;
 
     public PanelCita() {
@@ -44,24 +44,29 @@ public class PanelCita extends javax.swing.JPanel {
         refrescarLista();
     }
     
-         public void refrescarLista() {
-        modelo.setRowCount(0);
-        tablaCita.setModel(modelo);
-        var repo = new CitaRepository();
-        for (Cita vete : repo.getCitaAll()) {
-            String[] datos = new String[8];
-            datos[0] = vete.getCedulacliente();
-            datos[1] = vete.getMascotaNombre();
-            datos[2] = vete.getHoraEntrada();
-            datos[3] = vete.getHoraSalida();
-            datos[4] = vete.getFecha();
-            datos[5] = vete.getDescrip();
-            datos[6] = vete.getNombreveterinario();
-            datos[7] = vete.getUsuarioS();
-            modelo.addRow(datos);
-
+public void refrescarLista() {
+    modelo.setRowCount(0);
+    tablaCita.setModel(modelo);
+    var repo = new CitaRepository();
+    for (Cita vete : repo.getCitaAll()) {
+        // Validar antes de continuar
+        if (vete.getUsuarioS() == null) {
+            continue; // No se agrega esta cita
         }
+
+        String[] datos = new String[8];
+        datos[0] = vete.getCedulacliente();
+        datos[1] = vete.getMascotaNombre();
+        datos[2] = vete.getHoraEntrada();
+        datos[3] = vete.getHoraSalida();
+        datos[4] = vete.getFecha();
+        datos[5] = vete.getDescrip();
+        datos[6] = vete.getNombreveterinario();
+        datos[7] = vete.getUsuarioS();
+
+        modelo.addRow(datos);
     }
+}
 
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -435,6 +440,7 @@ public class PanelCita extends javax.swing.JPanel {
                 ICitaRepository cita = new CitaRepository();
                 cita.getCitaAll().size();
                 int idCita=cita.getCitaAll().size()+1;
+                
                 txtCita.setText(idCita+"");
                 JOptionPane.showMessageDialog(this,idCita);
                 String cedulacliente = txtCedula.getText();
@@ -445,11 +451,12 @@ public class PanelCita extends javax.swing.JPanel {
                 String descripcion = txtDescripcion.getText();
                 String veterinario=ComboVeterins.getSelectedItem().toString();           
                 String usuarios=Admin_Login.usuarioOnline;
-
+                String confirmar="no";
+                idc=idCita+"";
                 IClientRepository repository = new ClienteRepository();
                 repository.BuscarClientPorId(cedulacliente);
 
-                var comando = new GuardarCitaCommand(idCita, cedulacliente, mascotaName, horaEntrada, horaSalida, fecha, descripcion,veterinario,usuarios);
+                var comando = new GuardarCitaCommand(idCita, cedulacliente, mascotaName, horaEntrada, horaSalida, fecha,confirmar,descripcion,veterinario,usuarios);
                 var repositoryCita = new CitaRepository();
                 var guardarCitaCommandHandler = new GuardarCitaCommandHandler(repositoryCita);
                 int total = guardarCitaCommandHandler.createCita(comando);
@@ -528,23 +535,31 @@ public class PanelCita extends javax.swing.JPanel {
             String fecha = txtFecha.getText();
             String descripcion = txtDescripcion.getText();
             String veterinario = ComboVeterins.getSelectedItem().toString();
-
+            String confirmar="no";
+            JOptionPane.showMessageDialog(this,idc);
+            citaActual.setIdcita(Integer.parseInt(idc));
             citaActual.setMascotaNombre(mascotaName);
             citaActual.setHoraEntrada(horaEntrada);
             citaActual.setHoraSalida(horaSalida);
             citaActual.setFecha(fecha);
+            citaActual.setConfirmar(confirmar);
             citaActual.setDescrip(descripcion);
             citaActual.setNombreveterinario(veterinario);
-
+            citaActual.setUsuarioS(Admin_Login.usuarioOnline);
+           
+            if(idc==null){
+                 JOptionPane.showMessageDialog(this, "Esta cita Ya fue Diagnosticada, por lo tando ya no es Editable");
+            }else{
             var editarCitaCommand = new EditarCitaCommand(citaActual.getIdcita(), citaActual.getCedulacliente(),
                     citaActual.getMascotaNombre(), citaActual.getHoraEntrada(), citaActual.getHoraSalida(),
-                    citaActual.getFecha(), citaActual.getDescrip(), citaActual.getNombreveterinario());
+                    citaActual.getFecha(), citaActual.getConfirmar(), citaActual.getDescrip(), citaActual.getNombreveterinario(), citaActual.getUsuarioS());
 
             var citaRepository = new CitaRepository();
             var editarCommandHandler = new EditarCitaCommandHandler(citaRepository);
             editarCommandHandler.editarCita(editarCitaCommand);
             JOptionPane.showMessageDialog(this, "Datos de cita editados ");
             cleanFields();
+            }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage());
         }
@@ -603,7 +618,7 @@ public class PanelCita extends javax.swing.JPanel {
         ComboVeterins.removeAllItems();
         for (Veterinario vete : repository.getVeteuAll()) {
             if (vete.getEspecialidad().equals(especiality)) {
-                ComboVeterins.addItem(vete.getNombre());
+                ComboVeterins.addItem(vete.getNombre()+" "+vete.getApellido());
             }
         }
     }//GEN-LAST:event_ComboEspActionPerformed

@@ -23,6 +23,7 @@ public class GuardarCitaCommandHandler implements IGuardarCitaCommand{
         cita1.setHoraEntrada(comand.getHoraEntrada());
         cita1.setHoraSalida(comand.getHoraSalida());
         cita1.setFecha(comand.getFecha());
+        cita1.setConfirmar(comand.getConfirmar());
         cita1.setDescrip(comand.getDescrip());
         cita1.setNombreveterinario(comand.getNombreveterinario());
         cita1.setUsuarioS(comand.getUsuarioS());

@@ -14,9 +14,11 @@ import javax.swing.JOptionPane;
 
 
 public class Admin_Login extends javax.swing.JFrame {
-
+    public String correo,contra;
     public static String usuarioOnline;
     public static String Tusuario;
+    public static String usuarioCC;
+    
     
     public Admin_Login() {
         initComponents();
@@ -130,6 +132,11 @@ public class Admin_Login extends javax.swing.JFrame {
                 ContinueBTMouseClicked(evt);
             }
         });
+        ContinueBT.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                ContinueBTKeyPressed(evt);
+            }
+        });
         jPanel1.add(ContinueBT);
         ContinueBT.setBounds(510, 320, 180, 30);
 
@@ -163,10 +170,28 @@ public class Admin_Login extends javax.swing.JFrame {
     }//GEN-LAST:event_CrossMouseClicked
 
     private void ContinueBTMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ContinueBTMouseClicked
-        String correo;
-        String contra;
+    inicio();
 
-        if (User_Name_Field.getText().isEmpty() || jPasswordField1.getText().isEmpty()) {
+
+    }//GEN-LAST:event_ContinueBTMouseClicked
+
+    private void backMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backMouseClicked
+
+        new Login_user_type().setVisible(true);
+        super.dispose();
+    }//GEN-LAST:event_backMouseClicked
+
+    private void ContinueBTKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ContinueBTKeyPressed
+     inicio();
+    }//GEN-LAST:event_ContinueBTKeyPressed
+
+
+    public void clearField() {
+        User_Name_Field.setText("");
+        jPasswordField1.setText("");
+    }
+   public void inicio(){
+                if (User_Name_Field.getText().isEmpty() || jPasswordField1.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Debes llenar todos los campos");
         } else {
             correo = User_Name_Field.getText();
@@ -180,6 +205,7 @@ public class Admin_Login extends javax.swing.JFrame {
                     if (usuario.getCorreo().equalsIgnoreCase(correo) && usuario.getClave().equalsIgnoreCase(contra)) {
                         usuarioOnline = usuario.getNombre() + " " + usuario.getApellido();
                         Tusuario = usuario.getRol();
+                        usuarioCC=usuario.getCedula();
                         
                         java.awt.EventQueue.invokeLater(new Runnable() {
                             public void run() {
@@ -197,19 +223,6 @@ public class Admin_Login extends javax.swing.JFrame {
             }
 
         }
-
-    }//GEN-LAST:event_ContinueBTMouseClicked
-
-    private void backMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backMouseClicked
-
-        new Login_user_type().setVisible(true);
-        super.dispose();
-    }//GEN-LAST:event_backMouseClicked
-
-
-    public void clearField() {
-        User_Name_Field.setText("");
-        jPasswordField1.setText("");
     }
 
     public static void main(String args[]) {

@@ -17,13 +17,16 @@ public class EditarCitaCommandHandler implements IEditarCitaCommand{
     @Override
     public void editarCita(EditarCitaCommand comand) throws Exception {
         Cita cita = new Cita();
+        cita.setIdcita(comand.getIdcita());
         cita.setCedulacliente(comand.getCedulacliente());
         cita.setMascotaNombre(comand.getMascotaNombre());
         cita.setHoraEntrada(comand.getHoraEntrada());
         cita.setHoraSalida(comand.getHoraSalida());
         cita.setFecha(comand.getFecha());
+        cita.setConfirmar(comand.getConfirmar());
         cita.setDescrip(comand.getDescrip());
         cita.setNombreveterinario(comand.getVeterinario());
+        cita.setUsuarioS(comand.getUsuatend());
         citaRepository.editarCita(cita);
     }
 }

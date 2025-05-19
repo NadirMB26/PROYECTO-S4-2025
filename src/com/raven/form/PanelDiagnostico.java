@@ -2,11 +2,26 @@
 package com.raven.form;
 
 import co.edu.unicolombo.poo.Infrastructure.Vet.Repositories.CitaRepository;
+import co.edu.unicolombo.poo.Infrastructure.Vet.Repositories.DiagnosticoRepository;
+import co.edu.unicolombo.poo.Vet.Domain.Business.Handlers.Commands.EditarCitaCommandHandler;
+import co.edu.unicolombo.poo.Vet.Domain.Business.Handlers.Commands.GuardarDiagnosticoCommandHandler;
+import co.edu.unicolombo.poo.Vet.Domain.Business.Interfaces.Queries.IBuscarCitaQuery;
+import co.edu.unicolombo.poo.Vet.Domain.Business.Interfaces.Usecases.BuscarCitaQuery;
+import co.edu.unicolombo.poo.Vet.Domain.Business.Interfaces.Usecases.BuscarCitaQueryHandler;
+import co.edu.unicolombo.poo.Vet.Domain.Business.Interfaces.Usecases.EditarCitaCommand;
+import co.edu.unicolombo.poo.Vet.Domain.Business.Interfaces.Usecases.GuardarDiagnosticoCommand;
 import co.edu.unicolombo.poo.Vet.Domain.Model.Cita;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 public class PanelDiagnostico extends javax.swing.JPanel {
-
+public String id;
+public String cedulaCliente;
+public String fecha,entrada,salida,desk;
+public String nombreVeterinario;
+public String nombreMascota;
+public String conf="si";
+public Cita citaActual;
   DefaultTableModel modelo = new DefaultTableModel();
  
     public PanelDiagnostico() {
@@ -30,7 +45,7 @@ public class PanelDiagnostico extends javax.swing.JPanel {
         var repo = new CitaRepository();
         for (Cita vete : repo.getCitaAll()) {
             String[] datos = new String[10];
-            //datos[0] = vete.getIdcita();
+            datos[0] = vete.getIdcita()+"";
             datos[1] = vete.getCedulacliente();
             datos[2] = vete.getMascotaNombre();
             datos[3] = vete.getHoraEntrada();
@@ -52,13 +67,13 @@ public class PanelDiagnostico extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaUsuarios = new javax.swing.JTable();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        sintotxt = new javax.swing.JTextArea();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
+        tratatxt = new javax.swing.JTextArea();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jTextArea3 = new javax.swing.JTextArea();
+        obtxt = new javax.swing.JTextArea();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -88,36 +103,36 @@ public class PanelDiagnostico extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(tablaUsuarios);
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jTextArea1.addKeyListener(new java.awt.event.KeyAdapter() {
+        sintotxt.setColumns(20);
+        sintotxt.setRows(5);
+        sintotxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                jTextArea1KeyTyped(evt);
+                sintotxtKeyTyped(evt);
             }
         });
-        jScrollPane2.setViewportView(jTextArea1);
+        jScrollPane2.setViewportView(sintotxt);
 
         jLabel2.setText("Sintomas");
 
-        jTextArea2.setColumns(20);
-        jTextArea2.setRows(5);
-        jTextArea2.addKeyListener(new java.awt.event.KeyAdapter() {
+        tratatxt.setColumns(20);
+        tratatxt.setRows(5);
+        tratatxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                jTextArea2KeyTyped(evt);
+                tratatxtKeyTyped(evt);
             }
         });
-        jScrollPane3.setViewportView(jTextArea2);
+        jScrollPane3.setViewportView(tratatxt);
 
         jLabel3.setText("Tratamiento");
 
-        jTextArea3.setColumns(20);
-        jTextArea3.setRows(5);
-        jTextArea3.addKeyListener(new java.awt.event.KeyAdapter() {
+        obtxt.setColumns(20);
+        obtxt.setRows(5);
+        obtxt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                jTextArea3KeyTyped(evt);
+                obtxtKeyTyped(evt);
             }
         });
-        jScrollPane4.setViewportView(jTextArea3);
+        jScrollPane4.setViewportView(obtxt);
 
         jLabel4.setText("observaciones");
 
@@ -228,17 +243,50 @@ public class PanelDiagnostico extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        
+        
+        try {
+                int idc=Integer.parseInt(id);
+                String cedulaclient = cedulaCliente;
+                String mascotaNam = nombreMascota;
+                String sinto=sintotxt.getText();
+                String usuarioss=nombreVeterinario;
+                String fech = fecha;
+                String trata = tratatxt.getText();
+                String veterinario=nombreVeterinario;
+                String ob=obtxt.getText();
+                 if(id==null){
+                 JOptionPane.showMessageDialog(this, "Esta cita Ya fue Diagnosticada");
+            }else{
+                var comando = new GuardarDiagnosticoCommand(idc, cedulaclient, mascotaNam,fech,sinto,trata,ob,veterinario,usuarioss);
+                var repositoryCita = new DiagnosticoRepository();
+                var guardarCitaCommandHandler = new GuardarDiagnosticoCommandHandler(repositoryCita);
+                int total = guardarCitaCommandHandler.createCita(comando);
+                JOptionPane.showMessageDialog(this, "Diagnostico de cita"+id+" confirmado ");
+                cita(id);
+                confirmar();
+                JOptionPane.showMessageDialog(this,"atendido por " +veterinario);
+                refrescarLista();
+                 }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage());
+            }
+        
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void tablaUsuariosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaUsuariosMouseClicked
         int selectedRow = tablaUsuarios.getSelectedRow(); 
         if (selectedRow != -1) {
             // Obtener los datos de la fila seleccionada 
-            String cedulaCliente = (String) modelo.getValueAt(selectedRow, 1); 
-            String nombreMascota = (String) modelo.getValueAt(selectedRow, 2); 
-            String fecha = (String) modelo.getValueAt(selectedRow, 5); 
-            String nombreVeterinario = (String) modelo.getValueAt(selectedRow, 8); 
+            id=(String)modelo.getValueAt(selectedRow, 0);
+            cedulaCliente = (String) modelo.getValueAt(selectedRow, 1); 
+            nombreMascota = (String) modelo.getValueAt(selectedRow, 2); 
+            entrada=(String) modelo.getValueAt(selectedRow, 3); 
+            salida= (String) modelo.getValueAt(selectedRow, 4); 
+            fecha = (String) modelo.getValueAt(selectedRow, 5); 
+            conf = (String) modelo.getValueAt(selectedRow, 6); 
+            desk=(String) modelo.getValueAt(selectedRow, 7); 
+            nombreVeterinario = (String) modelo.getValueAt(selectedRow, 8); 
             // Actualizar los JLabel con los datos de la fila seleccionada 
             jLabel5.setText("Cedula cliente: " + cedulaCliente); 
             jLabel6.setText("Mascota: " + nombreMascota); 
@@ -247,24 +295,63 @@ public class PanelDiagnostico extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_tablaUsuariosMouseClicked
 
-    private void jTextArea1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea1KeyTyped
+    private void sintotxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_sintotxtKeyTyped
    char c = evt.getKeyChar();
         if ((c < 'a' || c > 'z') && (c < 'A') | c > 'Z')
             evt.consume();
-    }//GEN-LAST:event_jTextArea1KeyTyped
+    }//GEN-LAST:event_sintotxtKeyTyped
 
-    private void jTextArea2KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea2KeyTyped
+    private void tratatxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tratatxtKeyTyped
    char c = evt.getKeyChar();
         if ((c < 'a' || c > 'z') && (c < 'A') | c > 'Z')
             evt.consume();
-    }//GEN-LAST:event_jTextArea2KeyTyped
+    }//GEN-LAST:event_tratatxtKeyTyped
 
-    private void jTextArea3KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea3KeyTyped
+    private void obtxtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_obtxtKeyTyped
      char c = evt.getKeyChar();
         if ((c < 'a' || c > 'z') && (c < 'A') | c > 'Z')
             evt.consume();
-    }//GEN-LAST:event_jTextArea3KeyTyped
+    }//GEN-LAST:event_obtxtKeyTyped
+    public void cita(String id){
+                try {
+         
+            CitaRepository repository = new CitaRepository();
+            IBuscarCitaQuery queryHandler = new BuscarCitaQueryHandler(repository);
+            var query = new BuscarCitaQuery(id);
+            citaActual = queryHandler.obtenerCita(query);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
+    }
+    public void confirmar(){
+      
+     
+     
+     try {
 
+            citaActual.setIdcita(Integer.parseInt(id));
+            citaActual.setMascotaNombre(nombreMascota);
+            citaActual.setHoraEntrada(entrada);
+            citaActual.setHoraSalida(salida);
+            citaActual.setFecha(fecha);
+            citaActual.setConfirmar(conf);
+            citaActual.setDescrip(desk);
+            citaActual.setCedulacliente(cedulaCliente);
+            citaActual.setNombreveterinario(nombreVeterinario);
+
+            var editarCitaCommand = new EditarCitaCommand(citaActual.getIdcita(), citaActual.getCedulacliente(),
+                    citaActual.getMascotaNombre(), citaActual.getHoraEntrada(), citaActual.getHoraSalida(),
+                    citaActual.getFecha(),citaActual.getConfirmar(), citaActual.getDescrip(), citaActual.getNombreveterinario(), citaActual.getNombreveterinario());
+
+            var citaRepository = new CitaRepository();
+            var editarCommandHandler = new EditarCitaCommandHandler(citaRepository);
+            editarCommandHandler.editarCita(editarCitaCommand);
+            JOptionPane.showMessageDialog(this, "cita editados ");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
+                
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -282,9 +369,9 @@ public class PanelDiagnostico extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextArea jTextArea2;
-    private javax.swing.JTextArea jTextArea3;
+    private javax.swing.JTextArea obtxt;
+    private javax.swing.JTextArea sintotxt;
     private javax.swing.JTable tablaUsuarios;
+    private javax.swing.JTextArea tratatxt;
     // End of variables declaration//GEN-END:variables
 }

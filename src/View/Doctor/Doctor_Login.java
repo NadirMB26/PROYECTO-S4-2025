@@ -13,7 +13,8 @@ public class Doctor_Login extends javax.swing.JFrame {
 
   public static String usuarioOnline;
     public static String Tusuario;
-    
+    public static String usuarioCC;
+    public static String usuarioNombre;
     public Doctor_Login() {
         initComponents();
         
@@ -175,6 +176,8 @@ public class Doctor_Login extends javax.swing.JFrame {
                     if (usuario.getCorreo().equalsIgnoreCase(correo) && usuario.getClave().equalsIgnoreCase(contra)) {
                         usuarioOnline = usuario.getNombre() + " " + usuario.getApellido();
                         Tusuario = usuario.getRol();
+                        usuarioCC=usuario.getCedula();
+                        usuarioNombre=usuario.getNombre()+" "+usuario.getApellido();
                         
                         java.awt.EventQueue.invokeLater(new Runnable() {
                             public void run() {
