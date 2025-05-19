@@ -20,6 +20,8 @@ import co.edu.unicolombo.poo.Vet.Domain.Model.Mascota;
 import co.edu.unicolombo.poo.Vet.Domain.Model.Veterinario;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  *
@@ -67,9 +69,9 @@ public class PanelCita extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        dateChooser1 = new com.raven.datechooser.DateChooser();
         timeEntrada1 = new com.raven.swing.TimePicker();
         timeSalida1 = new com.raven.swing.TimePicker();
+        dateChooser2 = new com.raven.datechooser.DateChooser();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
@@ -104,12 +106,12 @@ public class PanelCita extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaCita = new javax.swing.JTable();
 
-        dateChooser1.setTextRefernce(txtFecha);
-
         timeEntrada1.setDisplayText(txtHoraEntrada);
 
         timeSalida1.setForeground(new java.awt.Color(255, 51, 51));
         timeSalida1.setDisplayText(txtHoraSalida);
+
+        dateChooser2.setTextRefernce(txtFecha);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
         jLabel1.setText("Registrar Cita");
@@ -445,12 +447,13 @@ public class PanelCita extends javax.swing.JPanel {
                 String descripcion = txtDescripcion.getText();
                 String veterinario=ComboVeterins.getSelectedItem().toString();           
                 String usuarios=Admin_Login.usuarioOnline;
+                
 
                 IClientRepository repository = new ClienteRepository();
                 repository.BuscarClientPorId(cedulacliente);
-
-                var comando = new GuardarCitaCommand(idCita, cedulacliente, mascotaName, horaEntrada, horaSalida, fecha, descripcion,veterinario,usuarios);
-                var repositoryCita = new CitaRepository();
+                CitaRepository repositoryCita = new CitaRepository();
+                
+                var comando = new GuardarCitaCommand(idCita, cedulacliente, mascotaName, horaEntrada, horaSalida, fecha, descripcion,veterinario,usuarios,repositoryCita);
                 var guardarCitaCommandHandler = new GuardarCitaCommandHandler(repositoryCita);
                 int total = guardarCitaCommandHandler.createCita(comando);
                 JOptionPane.showMessageDialog(this, "Cita guardada Correctamente, total " + total);
@@ -574,7 +577,7 @@ public class PanelCita extends javax.swing.JPanel {
     }//GEN-LAST:event_txtDescripcionActionPerformed
 
     private void btnFechaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFechaActionPerformed
-        dateChooser1.showPopup();
+        dateChooser2.showPopup();
     }//GEN-LAST:event_btnFechaActionPerformed
 
     private void txtFechaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFechaActionPerformed
@@ -633,7 +636,7 @@ public class PanelCita extends javax.swing.JPanel {
     private javax.swing.JButton btnHoraEntrada;
     private javax.swing.JButton btnHoraSalida;
     private javax.swing.JComboBox<String> comboBoxMascotas;
-    private com.raven.datechooser.DateChooser dateChooser1;
+    private com.raven.datechooser.DateChooser dateChooser2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel12;

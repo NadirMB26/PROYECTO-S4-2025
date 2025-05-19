@@ -13,26 +13,17 @@ public class EditarClientCommand {
      
  }
  
-
-public EditarClientCommand (String cedula,String apellido, String nombre,String direccion, String correo, String telefono) throws Exception {
-        if (cedula == null || cedula.trim().isEmpty()) {
-            throw new Exception("La cedula es requerida");
-        }
-        if (apellido == null || apellido.trim().isEmpty()) {
-            throw new Exception("El apellido es requerido");
-        }
-        if (nombre == null || nombre.trim().isEmpty()) {
-            throw new Exception("El nombre es requerido");
-        }
-        if (direccion == null || direccion.trim().isEmpty()) {
-            throw new Exception("La direccion es requerida");
-        }
-        if (correo == null || correo.trim().isEmpty()) {
-            throw new Exception("El correo es requerido");
-        }
-        if (telefono == null || telefono.trim().isEmpty()) {
-            throw new Exception("El telefono es requerido");
-        }
+public EditarClientCommand (String cedula,String apellido, String nombre,String direccion, 
+                                String correo, String telefono) throws Exception {
+    
+    validarCampo(cedula, "La cédula es requerida");
+    validarCampo(apellido, "El apellido es requerido");
+    validarCampo(nombre, "El nombre es requerido");
+    validarCampo(direccion, "La direccion es requerida");
+    if (correo == null & correo.contains("@")&&correo.contains(".com")&correo.trim().isEmpty()) {
+            throw new Exception("El correo es requerido o esta incompleto");
+        }    validarCampo(telefono, "El telefono es requerido");
+ 
         this.cedula=cedula;
         this.apellido = apellido;
         this.nombre = nombre;
@@ -40,6 +31,12 @@ public EditarClientCommand (String cedula,String apellido, String nombre,String 
         this.correo = correo;
         this.telefono = telefono;
     }
+
+private void validarCampo(String valor, String mensajeError) throws Exception {
+    if (valor == null || valor.trim().isEmpty()) {
+        throw new Exception(mensajeError);
+    }
+}
 
     public String getCedula() {
         return cedula;

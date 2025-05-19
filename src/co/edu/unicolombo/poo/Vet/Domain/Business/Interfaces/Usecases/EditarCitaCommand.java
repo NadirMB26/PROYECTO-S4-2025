@@ -19,30 +19,19 @@ public class EditarCitaCommand {
     private String fecha;
     private String descrip;
     private String veterinario;
-
-    public EditarCitaCommand(int idcita, String cedulacliente, String mascotaNombre, String horaEntrada, String horaSalida, String fecha, String descrip, String veterinario) throws Exception {
-        if (cedulacliente == null || cedulacliente.trim().isEmpty()) {
-            throw new Exception("La cedula del cliente es requerido");
-        }
-        if (mascotaNombre == null || mascotaNombre.trim().isEmpty()) {
-            throw new Exception("El nombre de la mascota es requerido");
-        }
-        if (horaEntrada == null || horaEntrada.trim().isEmpty()) {
-            throw new Exception("La hora de entrada es requerid");
-        }
-        if (horaSalida == null || horaSalida.trim().isEmpty()) {
-            throw new Exception("La hora de salida es requerida");
-        }
-        if (fecha == null || fecha.trim().isEmpty()) {
-            throw new Exception("La fecha es requerida");
-        }
-        if (descrip == null || descrip.trim().isEmpty()) {
-            throw new Exception("La descripcion es requerida");
-        }
-        if (veterinario == null || veterinario.trim().isEmpty()) {
-            throw new Exception("El veterinario es requerido");
-        }
+    
+    public EditarCitaCommand(int idcita, String cedulacliente, String mascotaNombre, 
+                                String horaEntrada, String horaSalida, String fecha, 
+                                String descrip, String veterinario) throws Exception {
         
+    validarCampo(cedulacliente, "La cédula del cliente es requerida");
+    validarCampo(mascotaNombre, "El nombre de la mascota es requerido");
+    validarCampo(horaEntrada, "La hora de entrada es requerida");
+    validarCampo(horaSalida, "La hora de salida es requerida");
+    validarCampo(fecha, "La fecha es requerida");
+    validarCampo(descrip, "La descripción es requerida");
+    validarCampo(veterinario, "El veterinario es requerido");
+
         this.idcita = idcita;
         this.cedulacliente = cedulacliente;
         this.mascotaNombre = mascotaNombre;
@@ -51,8 +40,13 @@ public class EditarCitaCommand {
         this.fecha = fecha;
         this.descrip = descrip;
         this.veterinario = veterinario;
-        
+}
+
+private void validarCampo(String valor, String mensajeError) throws Exception {
+    if (valor == null || valor.trim().isEmpty()) {
+        throw new Exception(mensajeError);
     }
+}
 
     public int getIdcita() {
         return idcita;

@@ -37,9 +37,6 @@ public class Cita {
            
     }
            
-
-
-
 public int getIdcita() {
         return idcita;
     }
