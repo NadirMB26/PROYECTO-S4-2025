@@ -8,6 +8,7 @@ import com.raven.form.Form;
 import com.raven.form.Home;
 import com.raven.form.PanelCita;
 import com.raven.form.PanelCliente;
+import com.raven.form.PanelColas;
 import com.raven.form.PanelDiagnostico;
 import com.raven.form.PanelUsuarios;
 import com.raven.form.panelMascota;
@@ -49,7 +50,7 @@ public class Main extends javax.swing.JFrame {
                     Doctor_Login.Tusuario="";
                     inicios(); 
                 }else if (index == 8) {
-                    System.out.println("Logout");
+                    showForm(new PanelColas());  
                 } else {
                     showForm(new Form(index));
                 }

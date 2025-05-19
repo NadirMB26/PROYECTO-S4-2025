@@ -1,5 +1,7 @@
 package com.raven.form;
 
+import co.edu.unicolombo.poo.Infrastructure.Vet.Repositories.ClienteRepository;
+import co.edu.unicolombo.poo.Infrastructure.Vet.Repositories.UsuarioRepository;
 import co.edu.unicolombo.poo.Infrastructure.Vet.Repositories.VeterinarioRepository;
 import co.edu.unicolombo.poo.Vet.Domain.Business.Handlers.Commands.EditarVeterinCommandHandler;
 import co.edu.unicolombo.poo.Vet.Domain.Business.Handlers.Commands.EliminarVeterinCommandHandler;
@@ -10,13 +12,14 @@ import co.edu.unicolombo.poo.Vet.Domain.Business.Interfaces.Usecases.BuscarVeter
 import co.edu.unicolombo.poo.Vet.Domain.Business.Interfaces.Usecases.BuscarVeterinQueryHandler;
 import co.edu.unicolombo.poo.Vet.Domain.Business.Interfaces.Usecases.EditarVeterinCommand;
 import co.edu.unicolombo.poo.Vet.Domain.Business.Interfaces.Usecases.GuardarVeterinCommand;
+import co.edu.unicolombo.poo.Vet.Domain.Model.Cliente;
+import co.edu.unicolombo.poo.Vet.Domain.Model.Usuario;
 import co.edu.unicolombo.poo.Vet.Domain.Model.Veterinario;
 
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 public class panelVeterinario extends javax.swing.JPanel {
-
 
     private Veterinario veterinActual;
     DefaultTableModel modelo = new DefaultTableModel();
@@ -32,7 +35,7 @@ public class panelVeterinario extends javax.swing.JPanel {
         modelo.addColumn("Clave");
         modelo.addColumn("Especialidad");
         refrescarLista();
- 
+
     }
 
     public void refrescarLista() {
@@ -328,6 +331,8 @@ public class panelVeterinario extends javax.swing.JPanel {
                 String especialidad = ComboEsp.getSelectedItem().toString();
                 String clave = FieldClave.getText();
 
+                validarCedulaUnica(cedula);
+                validarCorreoUnico(correo);
                 var comando = new GuardarVeterinCommand(cedula, nombre, apellido, direccion, correo, clave, telefono, especialidad);
                 var repository = new VeterinarioRepository();
                 var guardarVeterinCommandHandler = new GuardarVeterinCommandHandler(repository);
@@ -374,28 +379,36 @@ public class panelVeterinario extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(this, "Primero busque el veterinario y editelo");
                 return;
             }
+            // Obtener los datos del formulario
             String nombre = FieldName.getText();
             String apellido = FieldApellido.getText();
             String direccion = FieldDireccion.getText();
             String correo = FieldCorreo.getText();
-
+            String pass = FieldClave.getText();
             String telefono = FieldTelefono.getText();
-            //
-            String clave = FieldClave.getText();
-            String especialidad = ComboEsp.getSelectedItem().toString();
+            String rol = ComboEsp.getSelectedItem().toString();
 
+            // Actualizar el objeto
             veterinActual.setNombre(nombre);
             veterinActual.setApellido(apellido);
             veterinActual.setDireccion(direccion);
             veterinActual.setCorreo(correo);
-
+            veterinActual.setClave(pass);
             veterinActual.setTelefono(telefono);
-            veterinActual.setEspecialidad(especialidad);
-            veterinActual.setClave(clave);
+            veterinActual.setRol(rol);
 
-            var editarVeterinCommand = new EditarVeterinCommand(veterinActual.getCedula(),
-                    veterinActual.getApellido(), veterinActual.getNombre(), veterinActual.getDireccion(), veterinActual.getCorreo(), veterinActual.getTelefono(), veterinActual.getEspecialidad(), veterinActual.getClave());
+            // Ejecutar el comando
+            var editarVeterinCommand = new EditarVeterinCommand(
+                    veterinActual.getCedula(),
+                    veterinActual.getNombre(),
+                    veterinActual.getApellido(),
+                    veterinActual.getDireccion(),
+                    veterinActual.getCorreo(),
+                    veterinActual.getClave(),
+                    veterinActual.getTelefono(),
+                    veterinActual.getEspecialidad());
 
+            validarCorreoUnico(correo);
             var rolRepository = new VeterinarioRepository();
             var editarCommandHandler = new EditarVeterinCommandHandler(rolRepository);
             editarCommandHandler.editar(editarVeterinCommand);
@@ -423,6 +436,30 @@ public class panelVeterinario extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, ex.getMessage());
         }
     }//GEN-LAST:event_ButtonEliminarActionPerformed
+    private void validarCedulaUnica(String cedula) throws Exception {
+        ClienteRepository clienteRepo = new ClienteRepository();
+        UsuarioRepository usuarioRepo = new UsuarioRepository();
+        VeterinarioRepository veterinarioRepo = new VeterinarioRepository();
+
+        for (Cliente cliente : clienteRepo.getClientAll()) {
+            if (cliente.getCedula().equalsIgnoreCase(cedula)) {
+                throw new Exception("La cédula ya existe registrada como Cliente");
+            }
+        }
+
+        for (Usuario usuario : usuarioRepo.getUsuAll()) {
+            if (usuario.getCedula().equalsIgnoreCase(cedula)) {
+                throw new Exception("La cédula ya existe registrada como Usuario");
+            }
+        }
+
+        for (Veterinario veterinario : veterinarioRepo.getVeteuAll()) {
+            if (veterinario.getCedula().equalsIgnoreCase(cedula)) {
+                throw new Exception("La cédula ya existe registrada como Veterinario");
+            }
+        }
+    }
+
     public void cleanFields() {
         FieldName.setText("");
         FieldCedula.setText("");
@@ -431,8 +468,35 @@ public class panelVeterinario extends javax.swing.JPanel {
         FieldCorreo.setText("");
         FieldTelefono.setText("");
         FieldClave.setText("");
-      
+
     }
+
+    private void validarCorreoUnico(String correo) throws Exception {
+        ClienteRepository clienteRepo = new ClienteRepository();
+        UsuarioRepository usuarioRepo = new UsuarioRepository();
+        VeterinarioRepository veterinarioRepo = new VeterinarioRepository();
+
+        for (Cliente cliente : clienteRepo.getClientAll()) {
+            if (cliente.getCorreo().equalsIgnoreCase(correo)) {
+                throw new Exception("El correo ya existe registrado en la plataforma");
+            }
+        }
+
+        for (Usuario usuario : usuarioRepo.getUsuAll()) {
+            if (usuario.getCorreo().equalsIgnoreCase(correo)) {
+                throw new Exception("El correo ya existe registrado en la plataforma");
+
+            }
+        }
+
+        for (Veterinario veterinario : veterinarioRepo.getVeteuAll()) {
+            if (veterinario.getCorreo().equalsIgnoreCase(correo)) {
+                throw new Exception("El correo ya existe registrado en la plataforma");
+
+            }
+        }
+    }
+
     private void FieldCedulaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FieldCedulaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_FieldCedulaActionPerformed
@@ -446,13 +510,13 @@ public class panelVeterinario extends javax.swing.JPanel {
     }//GEN-LAST:event_FieldClaveActionPerformed
 
     private void FieldCedulaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_FieldCedulaKeyTyped
-                  char c = evt.getKeyChar();
+        char c = evt.getKeyChar();
         if (c < '0' || c > '9')
             evt.consume();
     }//GEN-LAST:event_FieldCedulaKeyTyped
 
     private void FieldTelefonoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_FieldTelefonoKeyTyped
-            char c = evt.getKeyChar();
+        char c = evt.getKeyChar();
         if (c < '0' || c > '9')
             evt.consume();
     }//GEN-LAST:event_FieldTelefonoKeyTyped
@@ -462,13 +526,13 @@ public class panelVeterinario extends javax.swing.JPanel {
     }//GEN-LAST:event_FieldNameActionPerformed
 
     private void FieldApellidoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_FieldApellidoKeyTyped
-       char c = evt.getKeyChar();
+        char c = evt.getKeyChar();
         if ((c < 'a' || c > 'z') && (c < 'A') | c > 'Z')
             evt.consume();
     }//GEN-LAST:event_FieldApellidoKeyTyped
 
     private void FieldNameKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_FieldNameKeyTyped
-   char c = evt.getKeyChar();
+        char c = evt.getKeyChar();
         if ((c < 'a' || c > 'z') && (c < 'A') | c > 'Z')
             evt.consume();
     }//GEN-LAST:event_FieldNameKeyTyped

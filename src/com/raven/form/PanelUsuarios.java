@@ -1,7 +1,8 @@
-
 package com.raven.form;
 
+import co.edu.unicolombo.poo.Infrastructure.Vet.Repositories.ClienteRepository;
 import co.edu.unicolombo.poo.Infrastructure.Vet.Repositories.UsuarioRepository;
+import co.edu.unicolombo.poo.Infrastructure.Vet.Repositories.VeterinarioRepository;
 import co.edu.unicolombo.poo.Vet.Domain.Business.Handlers.Commands.EditarUsuCommandHandler;
 import co.edu.unicolombo.poo.Vet.Domain.Business.Handlers.Commands.EliminarUsuCommandHandler;
 import co.edu.unicolombo.poo.Vet.Domain.Business.Handlers.Commands.GuardarUsuCommandHandler;
@@ -11,7 +12,9 @@ import co.edu.unicolombo.poo.Vet.Domain.Business.Interfaces.Usecases.BuscarUsuQu
 import co.edu.unicolombo.poo.Vet.Domain.Business.Interfaces.Usecases.BuscarUsuquery;
 import co.edu.unicolombo.poo.Vet.Domain.Business.Interfaces.Usecases.EditarUsuCommand;
 import co.edu.unicolombo.poo.Vet.Domain.Business.Interfaces.Usecases.GuardarUsuCommand;
+import co.edu.unicolombo.poo.Vet.Domain.Model.Cliente;
 import co.edu.unicolombo.poo.Vet.Domain.Model.Usuario;
+import co.edu.unicolombo.poo.Vet.Domain.Model.Veterinario;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -20,8 +23,10 @@ import javax.swing.table.DefaultTableModel;
  * @author nadir
  */
 public class PanelUsuarios extends javax.swing.JPanel {
- DefaultTableModel modelo = new DefaultTableModel();
-private Usuario usuActual;
+
+    DefaultTableModel modelo = new DefaultTableModel();
+    private Usuario usuActual;
+
     public PanelUsuarios() {
         initComponents();
         modelo.addColumn("Cedula");
@@ -34,7 +39,8 @@ private Usuario usuActual;
         modelo.addColumn("Rol");
         refrescarLista();
     }
-     public void refrescarLista() {
+
+    public void refrescarLista() {
         modelo.setRowCount(0);
         tablaUsuarios.setModel(modelo);
         var repo = new UsuarioRepository();
@@ -224,35 +230,37 @@ private Usuario usuActual;
     }// </editor-fold>//GEN-END:initComponents
 
     private void ButtonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonSaveActionPerformed
-        if(FieldName.getText().isEmpty()|| FieldCedula.getText().isEmpty()){
-            JOptionPane.showMessageDialog(this,"Debes llenar todos los campos");
-        }else{
+        if (FieldName.getText().isEmpty() || FieldCedula.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Debes llenar todos los campos");
+        } else {
             try {
                 String nombre = FieldName.getText();
-                String cedula=FieldCedula.getText();
-                String apellido=FieldApellido.getText();
-                String direccion=FieldDireccion.getText();
-                String correo=FieldCorreo.getText();
-                String clave=FieldClave.getText();
-                String telefono=FieldTelefono.getText();
+                String cedula = FieldCedula.getText();
+                String apellido = FieldApellido.getText();
+                String direccion = FieldDireccion.getText();
+                String correo = FieldCorreo.getText();
+                String clave = FieldClave.getText();
+                String telefono = FieldTelefono.getText();
                 String tipo;
-                if(radioRecep.isSelected()){
-                    tipo="RECEPCIONISTA";
-                }else if(radioAdmin.isSelected()){
-                    tipo="ADMIN";
-                }else{
-                    JOptionPane.showMessageDialog(this,"Debes seleccionar un tipo","ALERTA",JOptionPane.ERROR_MESSAGE);
+                if (radioRecep.isSelected()) {
+                    tipo = "RECEPCIONISTA";
+                } else if (radioAdmin.isSelected()) {
+                    tipo = "ADMIN";
+                } else {
+                    JOptionPane.showMessageDialog(this, "Debes seleccionar un tipo", "ALERTA", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                var comando = new GuardarUsuCommand(cedula, apellido, nombre,direccion,correo, clave, telefono, tipo);
-                var repository=new UsuarioRepository();
-                var guardarUsuCommandHandler= new GuardarUsuCommandHandler(repository);
-                int total=guardarUsuCommandHandler.createUsu(comando);
-                JOptionPane.showMessageDialog(this,"Usuario guardado Correctamente, total "+total);
+                validarCedulaUnica(cedula);
+                validarCorreoUnico(correo);
+                var comando = new GuardarUsuCommand(cedula, apellido, nombre, direccion, correo, clave, telefono, tipo);
+                var repository = new UsuarioRepository();
+                var guardarUsuCommandHandler = new GuardarUsuCommandHandler(repository);
+                int total = guardarUsuCommandHandler.createUsu(comando);
+                JOptionPane.showMessageDialog(this, "Usuario guardado Correctamente, total " + total);
                 limpiar();
                 refrescarLista();
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this,ex.getMessage());
+                JOptionPane.showMessageDialog(this, ex.getMessage());
             }
 
         }
@@ -262,11 +270,11 @@ private Usuario usuActual;
     private void ButtonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonBuscarActionPerformed
         try {
             String id = JOptionPane.showInputDialog(this, "Ingrese el ID del Usuario");
-            int rolId= Integer.parseInt(id);
-            IUsuRepository repository=new UsuarioRepository();
+            int rolId = Integer.parseInt(id);
+            IUsuRepository repository = new UsuarioRepository();
             IBuscarUsuQuery queryHandler = new BuscarUsuQueryHandler(repository);
-            var query=new BuscarUsuquery(rolId);
-            usuActual=queryHandler.obtenerRol(query);
+            var query = new BuscarUsuquery(rolId);
+            usuActual = queryHandler.obtenerRol(query);
             FieldCedula.setText(usuActual.getCedula());
             FieldName.setText(usuActual.getNombre());
             FieldApellido.setText(usuActual.getApellido());
@@ -282,17 +290,22 @@ private Usuario usuActual;
 
     private void ButtonEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonEditarActionPerformed
         try {
-            if(usuActual==null){
-                JOptionPane.showMessageDialog(this,"Primero busque el rol y editelo");
+            if (usuActual == null) {
+                JOptionPane.showMessageDialog(this, "Primero busque el rol y editelo");
                 return;
             }
             String nombre = FieldName.getText();
-            String apellido=FieldApellido.getText();
-            String direccion=FieldDireccion.getText();
-            String correo=FieldCorreo.getText();
-            String clave=FieldClave.getText();
-            String telefono=FieldTelefono.getText();
-
+            String apellido = FieldApellido.getText();
+            String direccion = FieldDireccion.getText();
+            String correo = FieldCorreo.getText();
+            String clave = FieldClave.getText();
+            String telefono = FieldTelefono.getText();
+            String tipo;
+            if (radioRecep.isSelected()) {
+                tipo = "RECEPCIONISTA";
+            } else if (radioAdmin.isSelected()) {
+                tipo = "ADMIN";
+            }
             usuActual.setNombre(nombre);
             usuActual.setApellido(apellido);
             usuActual.setDireccion(direccion);
@@ -300,36 +313,86 @@ private Usuario usuActual;
             usuActual.setClave(clave);
             usuActual.setTelefono(telefono);
 
-            var editarUsuCommand=new EditarUsuCommand(usuActual.getCedula(),
-                usuActual.getApellido(),usuActual.getNombre(),usuActual.getDireccion(),usuActual.getCorreo(),usuActual.getClave(),usuActual.getTelefono());
+            validarCorreoUnico(correo);
+            var editarUsuCommand = new EditarUsuCommand(usuActual.getCedula(),
+                    usuActual.getApellido(), usuActual.getNombre(), usuActual.getDireccion(), usuActual.getCorreo(), usuActual.getClave(), usuActual.getTelefono(), usuActual.getRol());
 
-            var rolRepository=new UsuarioRepository();
-            var editarCommandHandler=new EditarUsuCommandHandler(rolRepository);
+            var rolRepository = new UsuarioRepository();
+            var editarCommandHandler = new EditarUsuCommandHandler(rolRepository);
             editarCommandHandler.editar(editarUsuCommand);
-            JOptionPane.showMessageDialog(this,"Rol Editado ");
+            JOptionPane.showMessageDialog(this, "Rol Editado ");
             limpiar();
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this,ex.getMessage());
+            JOptionPane.showMessageDialog(this, ex.getMessage());
         }
     }//GEN-LAST:event_ButtonEditarActionPerformed
 
     private void ButtonEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonEliminarActionPerformed
         try {
-            if(usuActual==null){
-                JOptionPane.showMessageDialog(this,"Primero busque el rol ");
+            if (usuActual == null) {
+                JOptionPane.showMessageDialog(this, "Primero busque el rol ");
                 return;
             }
             // int eli=rolActual.getId();
-            var rolRepository=new UsuarioRepository();
-            var eliminarUsuCommand=new EliminarUsuCommandHandler(rolRepository);
+            var rolRepository = new UsuarioRepository();
+            var eliminarUsuCommand = new EliminarUsuCommandHandler(rolRepository);
             eliminarUsuCommand.eliminar(usuActual);
-            JOptionPane.showMessageDialog(this,"Rol Eliminado ");
+            JOptionPane.showMessageDialog(this, "Rol Eliminado ");
             limpiar();
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this,ex.getMessage());
+            JOptionPane.showMessageDialog(this, ex.getMessage());
         }
     }//GEN-LAST:event_ButtonEliminarActionPerformed
 
+    private void validarCedulaUnica(String cedula) throws Exception {
+        ClienteRepository clienteRepo = new ClienteRepository();
+        UsuarioRepository usuarioRepo = new UsuarioRepository();
+        VeterinarioRepository veterinarioRepo = new VeterinarioRepository();
+
+        for (Cliente cliente : clienteRepo.getClientAll()) {
+            if (cliente.getCedula().equalsIgnoreCase(cedula)) {
+                throw new Exception("La cédula ya existe registrada como Cliente");
+            }
+        }
+
+        for (Usuario usuario : usuarioRepo.getUsuAll()) {
+            if (usuario.getCedula().equalsIgnoreCase(cedula)) {
+                throw new Exception("La cédula ya existe registrada como Usuario");
+            }
+        }
+
+        for (Veterinario veterinario : veterinarioRepo.getVeteuAll()) {
+            if (veterinario.getCedula().equalsIgnoreCase(cedula)) {
+                throw new Exception("La cédula ya existe registrada como Veterinario");
+            }
+        }
+    }
+
+    private void validarCorreoUnico(String correo) throws Exception {
+        ClienteRepository clienteRepo = new ClienteRepository();
+        UsuarioRepository usuarioRepo = new UsuarioRepository();
+        VeterinarioRepository veterinarioRepo = new VeterinarioRepository();
+
+        for (Cliente cliente : clienteRepo.getClientAll()) {
+            if (cliente.getCorreo().equalsIgnoreCase(correo)) {
+                throw new Exception("El correo ya existe registrado en la plataforma");
+            }
+        }
+
+        for (Usuario usuario : usuarioRepo.getUsuAll()) {
+            if (usuario.getCorreo().equalsIgnoreCase(correo)) {
+                throw new Exception("El correo ya existe registrado en la plataforma");
+
+            }
+        }
+
+        for (Veterinario veterinario : veterinarioRepo.getVeteuAll()) {
+            if (veterinario.getCorreo().equalsIgnoreCase(correo)) {
+                throw new Exception("El correo ya existe registrado en la plataforma");
+
+            }
+        }
+    }
     private void FieldCedulaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FieldCedulaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_FieldCedulaActionPerformed
@@ -339,38 +402,38 @@ private Usuario usuActual;
     }//GEN-LAST:event_radioAdminActionPerformed
 
     private void FieldCedulaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_FieldCedulaKeyTyped
-         char c = evt.getKeyChar();
+        char c = evt.getKeyChar();
         if (c < '0' || c > '9')
             evt.consume();
     }//GEN-LAST:event_FieldCedulaKeyTyped
 
     private void FieldNameKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_FieldNameKeyTyped
-         char c = evt.getKeyChar();
+        char c = evt.getKeyChar();
         if ((c < 'a' || c > 'z') && (c < 'A') | c > 'Z')
             evt.consume();
     }//GEN-LAST:event_FieldNameKeyTyped
 
     private void FieldApellidoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_FieldApellidoKeyTyped
-           char c = evt.getKeyChar();
+        char c = evt.getKeyChar();
         if ((c < 'a' || c > 'z') && (c < 'A') | c > 'Z')
             evt.consume();
     }//GEN-LAST:event_FieldApellidoKeyTyped
 
     private void FieldTelefonoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_FieldTelefonoKeyTyped
-          char c = evt.getKeyChar();
+        char c = evt.getKeyChar();
         if (c < '0' || c > '9')
             evt.consume();
     }//GEN-LAST:event_FieldTelefonoKeyTyped
- public void limpiar(){
-           FieldName.setText("");
-            FieldCedula.setText("");
-            FieldApellido.setText("");
-            FieldDireccion.setText("");
-            FieldCorreo.setText("");
-            FieldClave.setText("");
-            FieldTelefono.setText("");
-           radioAdmin.setSelected(false);
-           radioRecep.setSelected(false);
+    public void limpiar() {
+        FieldName.setText("");
+        FieldCedula.setText("");
+        FieldApellido.setText("");
+        FieldDireccion.setText("");
+        FieldCorreo.setText("");
+        FieldClave.setText("");
+        FieldTelefono.setText("");
+        radioAdmin.setSelected(false);
+        radioRecep.setSelected(false);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

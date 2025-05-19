@@ -9,13 +9,14 @@ public class EditarUsuCommand {
  protected String correo ;
  protected String clave ;
  protected String telefono ;
+ protected String rol;
  
  public EditarUsuCommand(){
      
  }
  
 
-public EditarUsuCommand (String cedula,String apellido, String nombre,String direccion, String correo, String clave, String telefono) throws Exception {
+public EditarUsuCommand (String cedula,String apellido, String nombre,String direccion, String correo, String clave, String telefono, String rol) throws Exception {
         if (cedula == null || cedula.trim().isEmpty()) {
             throw new Exception("La cedula es requerida");
         }
@@ -44,6 +45,7 @@ public EditarUsuCommand (String cedula,String apellido, String nombre,String dir
         this.correo = correo;
         this.clave = clave;
         this.telefono = telefono;
+        this.rol=rol;
     }
 
     public String getCedula() {
@@ -74,4 +76,13 @@ public EditarUsuCommand (String cedula,String apellido, String nombre,String dir
         return telefono;
     }
 
+    public String getRol() {
+        return rol;
+    }
+
+    public void setRol(String rol) {
+        this.rol = rol;
+    }
+    
+    
 }

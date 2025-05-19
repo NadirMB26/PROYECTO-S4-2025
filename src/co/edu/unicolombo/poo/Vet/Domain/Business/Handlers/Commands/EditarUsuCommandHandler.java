@@ -25,6 +25,7 @@ public class EditarUsuCommandHandler implements IEditarUsuCommand{
         usu1.setCorreo(comand.getCorreo());
         usu1.setClave(comand.getClave());
         usu1.setTelefono(comand.getTelefono());
+        usu1.setRol(comand.getRol());
         usuRepository.editUsu(usu1);
     }
 

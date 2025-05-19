@@ -4,6 +4,7 @@
  */
 package com.raven.form;
 
+import View.Admin.Admin_Login;
 import co.edu.unicolombo.poo.Infrastructure.Vet.Repositories.CitaRepository;
 import co.edu.unicolombo.poo.Infrastructure.Vet.Repositories.ClienteRepository;
 import co.edu.unicolombo.poo.Infrastructure.Vet.Repositories.MascotasRepository;
@@ -294,6 +295,9 @@ DefaultTableModel modelo = new DefaultTableModel();
     }//GEN-LAST:event_ComboPetsActionPerformed
 
     private void ButtonEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonEliminarActionPerformed
+         if(Admin_Login.Tusuario.equalsIgnoreCase("recepcionista")){
+             JOptionPane.showMessageDialog(this,"No tienes acceso a este modulo");
+             }else{
         try {
             if (petActual == null) {
                 JOptionPane.showMessageDialog(this, "Primero busque la mascota ");
@@ -327,6 +331,7 @@ DefaultTableModel modelo = new DefaultTableModel();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage());
         }
+         }
     }//GEN-LAST:event_ButtonEliminarActionPerformed
 
     private void ButtonEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonEditarActionPerformed

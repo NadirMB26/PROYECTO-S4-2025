@@ -25,7 +25,7 @@ public class GuardarVeterinCommand {
         if (direccion == null || direccion.trim().isEmpty()) {
             throw new Exception("La direccion es requerida");
         }
-        if (correo == null & correo.contains("@")&&correo.contains(".com")&correo.trim().isEmpty()) {
+        if (correo == null & correo.contains("@")&&correo.contains("gmail.com")&correo.trim().isEmpty()) {
             throw new Exception("El correo es requerido o esta incompleto");
         }
         if (especialidad == null || especialidad.trim().isEmpty()) {

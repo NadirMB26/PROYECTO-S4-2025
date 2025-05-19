@@ -4,6 +4,8 @@ package com.raven.form;
 import View.Admin.Admin_Login;
 import co.edu.unicolombo.poo.Infrastructure.Vet.Repositories.ClienteRepository;
 import co.edu.unicolombo.poo.Infrastructure.Vet.Repositories.MascotasRepository;
+import co.edu.unicolombo.poo.Infrastructure.Vet.Repositories.UsuarioRepository;
+import co.edu.unicolombo.poo.Infrastructure.Vet.Repositories.VeterinarioRepository;
 import co.edu.unicolombo.poo.Vet.Domain.Business.Handlers.Commands.EditarClientCommandHandler;
 import co.edu.unicolombo.poo.Vet.Domain.Business.Handlers.Commands.EliminarClientCommandHandler;
 import co.edu.unicolombo.poo.Vet.Domain.Business.Handlers.Commands.GuardarClientCommandHandler;
@@ -19,6 +21,7 @@ import co.edu.unicolombo.poo.Vet.Domain.Business.Interfaces.Usecases.GuardarClie
 import co.edu.unicolombo.poo.Vet.Domain.Model.Cliente;
 import co.edu.unicolombo.poo.Vet.Domain.Model.Mascota;
 import co.edu.unicolombo.poo.Vet.Domain.Model.Usuario;
+import co.edu.unicolombo.poo.Vet.Domain.Model.Veterinario;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -304,7 +307,8 @@ public void limpiar(){
                 String correo=FieldCorreo.getText();
                 String telefono=FieldTelefono.getText();
                 String tipo="Cliente";
-
+                validarCedulaUnica(cedula);
+                validarCorreoUnico(correo);
                 var comando = new GuardarClientCommand(cedula, apellido, nombre,direccion,correo,telefono, tipo);
                 var repository=new ClienteRepository();
                 var guardarClientCommandHandler= new GuardarClientCommandHandler(repository);
@@ -360,6 +364,7 @@ public void limpiar(){
             usuActual.setCorreo(correo);
             usuActual.setTelefono(telefono);
 
+            validarCorreoUnico(correo);
             var editarClientCommand=new EditarClientCommand(usuActual.getCedula(),
                 usuActual.getApellido(),usuActual.getNombre(),usuActual.getDireccion(),usuActual.getCorreo(),usuActual.getTelefono());
             var rolRepository=new ClienteRepository();
@@ -414,7 +419,55 @@ public void limpiar(){
          refrescarLista();
     }//GEN-LAST:event_ButtonEliminarActionPerformed
 
+    private void validarCedulaUnica(String cedula) throws Exception {
+        ClienteRepository clienteRepo = new ClienteRepository();
+        UsuarioRepository usuarioRepo = new UsuarioRepository();
+        VeterinarioRepository veterinarioRepo = new VeterinarioRepository();
+
+        for (Cliente cliente : clienteRepo.getClientAll()) {
+            if (cliente.getCedula().equalsIgnoreCase(cedula)) {
+                throw new Exception("La cédula ya existe registrada como Cliente");
+            }
+        }
+
+        for (Usuario usuario : usuarioRepo.getUsuAll()) {
+            if (usuario.getCedula().equalsIgnoreCase(cedula)) {
+                throw new Exception("La cédula ya existe registrada como Usuario");
+            }
+        }
+
+        for (Veterinario veterinario : veterinarioRepo.getVeteuAll()) {
+            if (veterinario.getCedula().equalsIgnoreCase(cedula)) {
+                throw new Exception("La cédula ya existe registrada como Veterinario");
+            }
+        }
+    }
     
+     private void validarCorreoUnico(String correo) throws Exception {
+        ClienteRepository clienteRepo = new ClienteRepository();
+        UsuarioRepository usuarioRepo = new UsuarioRepository();
+        VeterinarioRepository veterinarioRepo = new VeterinarioRepository();
+
+        for (Cliente cliente : clienteRepo.getClientAll()) {
+            if (cliente.getCorreo().equalsIgnoreCase(correo)) {
+                throw new Exception("El correo ya existe registrado en la plataforma");
+            }
+        }
+
+        for (Usuario usuario : usuarioRepo.getUsuAll()) {
+            if (usuario.getCorreo().equalsIgnoreCase(correo)) {
+                throw new Exception("El correo ya existe registrado en la plataforma");
+
+            }
+        }
+
+        for (Veterinario veterinario : veterinarioRepo.getVeteuAll()) {
+            if (veterinario.getCorreo().equalsIgnoreCase(correo)) {
+                throw new Exception("El correo ya existe registrado en la plataforma");
+
+            }
+        }
+    }
     
     private void FieldCedulaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FieldCedulaActionPerformed
         // TODO add your handling code here:

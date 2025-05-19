@@ -3,6 +3,8 @@ package com.raven.component;
 import View.Admin.Admin_Login;
 import View.Doctor.Doctor_Login;
 import com.raven.event.EventMenu;
+import com.raven.form.PanelLog;
+import com.raven.form.PanelLog2;
 import com.raven.swing.ButtonMenu;
 import com.raven.swing.scrollbar.ScrollBarCustom;
 import java.awt.Color;
@@ -11,23 +13,29 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
 import net.miginfocom.swing.MigLayout;
 
 public class Menu extends javax.swing.JPanel {
-
+    public String usutipo1= Admin_Login.Tusuario;
+    public String usutipo2= Doctor_Login.Tusuario;
     private EventMenu event;
-
+    public String datosu="";
     public Menu() {
         initComponents();
         if(Admin_Login.usuarioOnline.equalsIgnoreCase("")){
         usuarioACT.setText(Doctor_Login.usuarioOnline);
         Tipo.setText(Doctor_Login.Tusuario="Veterinario");
+        datosu= "Usuario "+Doctor_Login.usuarioOnline+" Rol:"+Doctor_Login.Tusuario ;
         }else{
         usuarioACT.setText(Admin_Login.usuarioOnline);
         Tipo.setText(Admin_Login.Tusuario);  
+        datosu= "Usuario "+Admin_Login.usuarioOnline+" Rol:"+Admin_Login.Tusuario ;
         }
-     
+      
         setOpaque(false);
         ScrollBarCustom sb = new ScrollBarCustom();
         sb.setForeground(new Color(130, 130, 130, 100));
@@ -49,7 +57,6 @@ public class Menu extends javax.swing.JPanel {
             
         ImageIcon iconoMascota = new ImageIcon(getClass().getResource("/com/raven/icon/perfil1.png"));
         imageAvatar1.setIcon(iconoMascota);
-
         addMenu(new ImageIcon(getClass().getResource("/com/raven/icon/1.png")), "Home", 0);
         addMenu(new ImageIcon(getClass().getResource("/com/raven/icon/2.png")), "Clientes", 1);
         addMenu(new ImageIcon(getClass().getResource("/com/raven/icon/3.png")), "Mascotas", 2);
@@ -57,6 +64,7 @@ public class Menu extends javax.swing.JPanel {
         addMenu(new ImageIcon(getClass().getResource("/com/raven/icon/8.png")), "Configuracion Veterinaio", 4);
         addMenu(new ImageIcon(getClass().getResource("/com/raven/icon/8.png")), "Configuracion Usuarios", 5);
         addMenu(new ImageIcon(getClass().getResource("/com/raven/icon/4.png")), "Gestionar Diagnostico", 6);
+        addMenu(new ImageIcon(getClass().getResource("/com/raven/icon/4.png")), "colas de citas", 8);
         }else{
         ImageIcon iconoMascota = new ImageIcon(getClass().getResource("/com/raven/icon/veterinario.png"));
         imageAvatar1.setIcon(iconoMascota);
@@ -114,6 +122,11 @@ public class Menu extends javax.swing.JPanel {
         imageAvatar1.setForeground(new java.awt.Color(231, 231, 231));
         imageAvatar1.setBorderSize(2);
         imageAvatar1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/raven/icon/perfil1.png"))); // NOI18N
+        imageAvatar1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                imageAvatar1MouseClicked(evt);
+            }
+        });
 
         usuarioACT.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
         usuarioACT.setForeground(new java.awt.Color(224, 224, 224));
@@ -202,6 +215,25 @@ public class Menu extends javax.swing.JPanel {
                 .addComponent(roundPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void imageAvatar1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imageAvatar1MouseClicked
+    if(usutipo1.equalsIgnoreCase("admin")||usutipo1.equalsIgnoreCase("recepcionista")){
+    JDialog dialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor(this),datosu, true);
+    dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+    dialog.setSize(400, 500);
+    dialog.setLocationRelativeTo(null); // Centrado en la pantalla
+    dialog.add(new PanelLog()); // Asegúrate que existe
+    dialog.setVisible(true);
+    }else{
+    JDialog dialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor(this),datosu, true);
+    dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+    dialog.setSize(400, 500);
+    dialog.setLocationRelativeTo(null); // Centrado en la pantalla
+    dialog.add(new PanelLog2()); // Asegúrate que existe
+    dialog.setVisible(true);  
+    }
+
+    }//GEN-LAST:event_imageAvatar1MouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Tipo;
