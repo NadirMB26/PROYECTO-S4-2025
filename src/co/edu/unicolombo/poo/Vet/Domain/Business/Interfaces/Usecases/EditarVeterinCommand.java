@@ -19,35 +19,22 @@ public class EditarVeterinCommand {
     private String telefono;
     private String clave;
 
-    public EditarVeterinCommand(String cedula, String nombre, String apellido, String direccion , String correo, String clave, String telefono, String especialidad) throws Exception {
 
-        if (cedula == null || cedula.trim().isEmpty()) {
-            throw new Exception("La cedula es requerida");
+ public EditarVeterinCommand(String cedula, String nombre, String apellido, 
+                                String direccion , String correo, String clave, 
+                                String telefono, String especialidad) throws Exception {
+     
+    validarCampo(cedula, "La cédula es requerida");
+    validarCampo(nombre, "El nombre es requerido");
+    validarCampo(apellido, "El apellido es requerido");
+    validarCampo(especialidad, "La especialidad es requerida");
+    if (correo == null & correo.contains("@")&&correo.contains(".com")&correo.trim().isEmpty()) {
+            throw new Exception("El correo es requerido o esta incompleto");
         }
-        if (apellido == null || apellido.trim().isEmpty()) {
-            throw new Exception("El apellido es requerido");
-        }
-        if (nombre == null || nombre.trim().isEmpty()) {
-            throw new Exception("El nombre es requerido");
-        }
-        if (direccion == null || direccion.trim().isEmpty()) {
-            throw new Exception("La direccion es requerida");
-        }
-        if (correo == null || correo.trim().isEmpty()) {
-            throw new Exception("El correo es requerido");
-        }
-        if (especialidad == null || especialidad.trim().isEmpty()) {
-            throw new Exception("La especialidad es requerida");
-        }
-        if (telefono == null || telefono.trim().isEmpty()) {
-            throw new Exception("El telefono es requerido");
-
-        }
-        if (clave == null || clave.trim().isEmpty()) {
-            throw new Exception("La clave es requerida");
-
-        }
-
+    validarCampo(direccion, "La direccion es requerida");
+    validarCampo(telefono, "El telefono es requerido");
+    validarCampo(clave, "La clave es requerida");
+ 
         this.cedula = cedula;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -57,6 +44,12 @@ public class EditarVeterinCommand {
         this.telefono = telefono;
         this.clave=clave;
     }
+
+private void validarCampo(String valor, String mensajeError) throws Exception {
+    if (valor == null || valor.trim().isEmpty()) {
+        throw new Exception(mensajeError);
+    }
+}
 
     public String getCedula() {
         return cedula;

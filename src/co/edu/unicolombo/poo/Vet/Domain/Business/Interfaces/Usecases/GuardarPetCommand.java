@@ -1,8 +1,4 @@
-
 package co.edu.unicolombo.poo.Vet.Domain.Business.Interfaces.Usecases;
-
-
-
 
 public class GuardarPetCommand {
     
@@ -13,32 +9,27 @@ public class GuardarPetCommand {
     private String especie;
 
 
-    public GuardarPetCommand(String cedulaUsuario, String nombreMascota, String color, String TipoSangre, String especie)throws Exception {
-        
-        if (cedulaUsuario == null || cedulaUsuario.trim().isEmpty()) {
-            throw new Exception("La cedula del cliente es requerida");
-        }
-        if (nombreMascota == null || nombreMascota.trim().isEmpty()) {
-            throw new Exception("El nombre de la mascota es requerido");
-        }
-        if (color == null || color.trim().isEmpty()) {
-            throw new Exception("El color es requerido");
-        }
-        if (TipoSangre == null || TipoSangre.trim().isEmpty()) {
-            throw new Exception("El Tipo de sangre es requerid");
-        }
-        if (especie == null || especie.trim().isEmpty()) {
-            throw new Exception("La especie es requerida");
-        }
-
-        
-        
+    public GuardarPetCommand(String cedulaUsuario, String nombreMascota, String color,
+                                String TipoSangre, String especie)throws Exception {
+    
+    validarCampo(cedulaUsuario, "La cedula del cliente es requerida");
+    validarCampo(nombreMascota, "El nombre de la mascota es requerido");
+    validarCampo(color, "El color es requerido");
+    validarCampo(TipoSangre, "El tipo de sangre es requerido");
+    validarCampo(especie, "Laespecie es requerida");
+ 
         this.cedulaUsuario = cedulaUsuario;
         this.nombreMascota=nombreMascota;
         this.color = color;
         this.TipoSangre = TipoSangre;
         this.especie = especie;
     }
+
+private void validarCampo(String valor, String mensajeError) throws Exception {
+    if (valor == null || valor.trim().isEmpty()) {
+        throw new Exception(mensajeError);
+    }
+}
 
     public String getCedulaUsuario() {
         return cedulaUsuario;

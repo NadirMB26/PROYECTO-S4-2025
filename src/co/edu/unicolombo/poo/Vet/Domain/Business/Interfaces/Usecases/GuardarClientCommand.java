@@ -10,8 +10,19 @@ public class GuardarClientCommand {
     protected String telefono;
     protected String rol;
 
-    public GuardarClientCommand(String cedula, String apellido, String nombre, String direccion, String correo, String telefono, String rol) throws Exception {
-        validarParametros(cedula, apellido, nombre, direccion, correo, telefono, rol);
+     public GuardarClientCommand(String cedula, String apellido, String nombre,
+                                    String direccion, String correo, String telefono,
+                                    String rol) throws Exception {
+
+    validarParametros(cedula, "La cédula es requerida");
+    validarParametros(apellido, "El apellido es requerido");
+    validarParametros(nombre, "El nombre es requerido");
+    validarParametros(direccion, "La direccion es requerida");
+    if (correo == null & correo.contains("@")&&correo.contains(".com")&correo.trim().isEmpty()) {
+            throw new Exception("El correo es requerido o esta incompleto");
+        }
+    validarParametros(telefono, "El telefono es requerido");
+    validarParametros(rol, "El rol es requerido");
 
         this.cedula = cedula;
         this.apellido = apellido;
@@ -22,27 +33,9 @@ public class GuardarClientCommand {
         this.rol = rol;
     }
 
-    private void validarParametros(String cedula, String apellido, String nombre, String direccion, String correo, String telefono, String rol) throws Exception {
-        if (cedula == null || cedula.trim().isEmpty()) {
-            throw new Exception("La cedula es requerida");
-        }
-        if (apellido == null || apellido.trim().isEmpty()) {
-            throw new Exception("El apellido es requerido");
-        }
-        if (nombre == null || nombre.trim().isEmpty()) {
-            throw new Exception("El nombre es requerido");
-        }
-        if (direccion == null || direccion.trim().isEmpty()) {
-            throw new Exception("La direccion es requerida");
-        }
-        if (correo == null || !correo.contains("@") || !correo.contains(".com") || correo.trim().isEmpty()) { 
-            throw new Exception("El correo es requerido o te faltan datos");
-        }
-        if (telefono == null || telefono.trim().isEmpty()) {
-            throw new Exception("El telefono es requerido");
-        }
-        if (rol == null || rol.trim().isEmpty()) {
-            throw new Exception("El rol es requerido");
+    private void validarParametros(String valor, String mensajeError) throws Exception {
+        if (valor == null || valor.trim().isEmpty()) {
+            throw new Exception(mensajeError);
         }
     }
 

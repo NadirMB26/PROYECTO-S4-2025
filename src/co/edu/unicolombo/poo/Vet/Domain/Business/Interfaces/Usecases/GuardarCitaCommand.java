@@ -1,8 +1,9 @@
-
 package co.edu.unicolombo.poo.Vet.Domain.Business.Interfaces.Usecases;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
+import co.edu.unicolombo.poo.Infrastructure.Vet.Repositories.CitaRepository;
+import co.edu.unicolombo.poo.Vet.Domain.Model.Cita;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class GuardarCitaCommand {
     private int idcita;
@@ -14,33 +15,22 @@ public class GuardarCitaCommand {
     private String descrip;
     private String nombreveterinario;
     private String usuarioS;
+    private final CitaRepository citaRepository;
+
     
-    public GuardarCitaCommand(int idcita, String cedulaCliente, String mascotaNombre, String horaEntrada, String horaSalida, String fecha, String descrip,String nombreveterinario,String usuarioS) throws Exception {
-        if (cedulaCliente == null || cedulaCliente.trim().isEmpty()) {
-            throw new Exception("La cedula del cliente es requerido");
-        }
-        if (mascotaNombre == null || mascotaNombre.trim().isEmpty()) {
-            throw new Exception("El nombre de la mascota es requerido");
-        }
-        if (horaEntrada == null || horaEntrada.trim().isEmpty()) {
-            throw new Exception("La hora de entrada es requerid");
-        }
-        if (horaSalida == null || horaSalida.trim().isEmpty()) {
-            throw new Exception("La hora de salida es requerida");
-        }
-        if (fecha == null || fecha.trim().isEmpty()) {
-            throw new Exception("La fecha es requerida");
-        }
-        if (descrip == null || descrip.trim().isEmpty()) {
-            throw new Exception("La descripcion es requerida");
-        }
-          if (nombreveterinario == null || nombreveterinario.trim().isEmpty()) {
-            throw new Exception("El veterinario es requerido para registrar tu cita");
-        }
-            if (usuarioS== null || usuarioS.trim().isEmpty()) {
-            throw new Exception("Es necesario que estes logeado para registrar una cita");
-        }
-        
+    public GuardarCitaCommand(int idcita, String cedulaCliente, String mascotaNombre, String horaEntrada,
+                               String horaSalida, String fecha, String descrip,
+                               String nombreveterinario, String usuarioS, CitaRepository citaRepository) throws Exception {
+
+        validarCampo(cedulaCliente, "La cédula del cliente es requerida");
+        validarCampo(mascotaNombre, "El nombre de la mascota es requerido");
+        validarCampo(horaEntrada, "La hora de entrada es requerida");
+        validarCampo(horaSalida, "La hora de salida es requerida");
+        validarCampo(fecha, "La fecha es requerida");
+        validarCampo(descrip, "La descripción es requerida");
+        validarCampo(nombreveterinario, "El veterinario es requerido para registrar tu cita");
+        validarCampo(usuarioS, "Es necesario que estés logueado para registrar una cita");
+
         this.idcita = idcita;
         this.cedulaCliente = cedulaCliente;
         this.mascotaNombre = mascotaNombre;
@@ -48,8 +38,44 @@ public class GuardarCitaCommand {
         this.horaSalida = horaSalida;
         this.fecha = fecha;
         this.descrip = descrip;
-        this.nombreveterinario=nombreveterinario;
-        this.usuarioS=usuarioS;
+        this.nombreveterinario = nombreveterinario;
+        this.usuarioS = usuarioS;
+        this.citaRepository = citaRepository;
+        
+        validarDisponibilidadCita();
+    }
+
+    private void validarDisponibilidadCita() throws Exception {
+    SimpleDateFormat sdfFecha = new SimpleDateFormat("yyyy-MM-dd");
+    SimpleDateFormat sdfHora = new SimpleDateFormat("HH:mm");
+
+    Date nuevaFecha = sdfFecha.parse(fecha);
+    Date nuevaEntrada = sdfHora.parse(horaEntrada);
+    Date nuevaSalida = sdfHora.parse(horaSalida);
+
+    for (Cita cita : citaRepository.getCitaAll()) {
+        Date fechaCita = sdfFecha.parse(cita.getFecha());
+        if (nuevaFecha.equals(fechaCita)) {
+            Date entradaCita = sdfHora.parse(cita.getHoraEntrada());
+            Date salidaCita = sdfHora.parse(cita.getHoraSalida());
+
+            // ❌ 1. Validar si se solapan las horas
+            if ((nuevaEntrada.before(salidaCita)) && (nuevaSalida.after(entradaCita))) {
+                throw new Exception("Ya existe una cita registrada entre esas horas.");
+            }
+
+            // ❌ 2. Validar si la hora exacta ya existe
+            if (nuevaEntrada.equals(entradaCita)) {
+                throw new Exception("Ya existe una cita registrada a esa hora.");
+            }
+        }
+    }
+}
+
+    private void validarCampo(String valor, String mensajeError) throws Exception {
+        if (valor == null || valor.trim().isEmpty()) {
+            throw new Exception(mensajeError);
+        }
     }
 
     public int getIdcita() {

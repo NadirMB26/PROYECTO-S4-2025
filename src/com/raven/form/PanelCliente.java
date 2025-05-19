@@ -41,8 +41,7 @@ public class PanelCliente extends javax.swing.JPanel {
         modelo.addColumn("Correo");
         modelo.addColumn("Telefono");
         refrescarLista();
-        
-       
+           
     }
     
      public void refrescarLista() {
@@ -63,8 +62,6 @@ public class PanelCliente extends javax.swing.JPanel {
         }
     }
      
-  
-     
 public void limpiar(){
          FieldName.setText("");
                 FieldCedula.setText("");
@@ -77,7 +74,6 @@ public void limpiar(){
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        dateChooser2 = new com.raven.datechooser.DateChooser();
         timePicker1 = new com.raven.swing.TimePicker();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaUsuarios = new javax.swing.JTable();
@@ -464,7 +460,6 @@ public void limpiar(){
     private javax.swing.JTextField FieldDireccion;
     private javax.swing.JTextField FieldName;
     private javax.swing.JTextField FieldTelefono;
-    private com.raven.datechooser.DateChooser dateChooser2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

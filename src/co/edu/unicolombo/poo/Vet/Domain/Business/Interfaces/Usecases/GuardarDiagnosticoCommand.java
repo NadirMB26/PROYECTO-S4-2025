@@ -13,24 +13,17 @@ public class GuardarDiagnosticoCommand {
     protected String nombreveterinario;
     protected String usuarioS;
 
-    
-    public GuardarDiagnosticoCommand(int idCita,String cedulacliente,String mascotaNombre,String fecha,String sintomas, String tratamiento, String observaciones,String nombreveterinario, String usuarioS) throws Exception {
-        if (cedulacliente == null || cedulacliente.trim().isEmpty()) {
-            throw new Exception("La cedula del cliente es requerido");
-        }
-        if (sintomas == null || sintomas.trim().isEmpty()) {
-            throw new Exception("La descripcion del sintoma es requerido");
-        }
-        if (tratamiento == null || tratamiento.trim().isEmpty()) {
-            throw new Exception("El tratamiento es requerido");
-        }
-         if (observaciones == null || observaciones.trim().isEmpty()) {
-            throw new Exception("La observacion es requerida");
-        }
-            if (usuarioS== null || usuarioS.trim().isEmpty()) {
-            throw new Exception("Es necesario que estes logeado para registrar una cita");
-        }
-        
+    public GuardarDiagnosticoCommand(int idCita,String cedulacliente,String mascotaNombre,
+                                        String fecha,String sintomas, String tratamiento, 
+                                        String observaciones, String nombreveterinario, 
+                                        String usuarioS) throws Exception {
+
+    validarCampo(cedulacliente, "La cédula del cliente es requerida");
+    validarCampo(sintomas, "La descripcion del sintoma es requerido");
+    validarCampo(tratamiento, "El tratamiento es requerido");
+    validarCampo(observaciones, "La observacion es requerida");
+    validarCampo(usuarioS, "El correo es requeridoEs necesario que estes logeado para registrar una cita");
+
         this.idCita = idCita;
         this.cedulacliente = cedulacliente;
         this.mascotaNombre = mascotaNombre;
@@ -40,6 +33,12 @@ public class GuardarDiagnosticoCommand {
         this.observaciones = observaciones;
         this.nombreveterinario=nombreveterinario;
         this.usuarioS=usuarioS;
+    }
+
+    private void validarCampo(String valor, String mensajeError) throws Exception {
+        if (valor == null || valor.trim().isEmpty()) {
+            throw new Exception(mensajeError);
+        }
     }
 
     public int getIdCita() {

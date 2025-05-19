@@ -9,8 +9,6 @@ import co.edu.unicolombo.poo.Vet.Domain.Model.Cita;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
-
 /**
  *
  * @author HP
